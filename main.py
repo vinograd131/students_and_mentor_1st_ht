@@ -36,6 +36,45 @@ class Student:
         else:
             return 'Ошибка'
 
+    @property
+    def __mean(self):
+        """
+
+        :return: returns the mean of all courses
+        The decorator finds the average of all grades from all courses.
+
+        """
+        all_grades = []
+        for course, grades in self.grades.items():
+            all_grades += grades
+        mean = sum(all_grades) / len(all_grades)
+        return mean
+
+    def __str__(self):
+        """
+
+        :return: prints the reviewer name
+        the function prints the reviewer name
+
+        """
+
+        if len(self.courses_in_progress) > 0:
+            courses_in_progress = ", ".join(self.courses_in_progress)
+        else:
+            courses_in_progress = "Нет курсов в процессе изучения"
+
+        if len(self.finished_courses) > 0:
+            closed_courses = ", ".join(self.finished_courses)
+        else:
+            closed_courses = "Нет завершённых курсов"
+
+        text = (f"Имя: {self.name}\n"
+                f"Фамилия: {self.surname}\n"
+                f"Средняя оценка за домашние задания: {self.__mean}\n"
+                f"Курсы в процессе изучения: {courses_in_progress}\n"
+                f"Завершенные курсы: {closed_courses}\n")
+        return text
+
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
@@ -48,6 +87,31 @@ class Lecturer(Mentor):
         self.grades = {}
         super().__init__(name, surname)
 
+    @property
+    def __mean(self):
+        """
+
+        :return: returns the mean of all courses
+        The decorator finds the average of all grades from all courses.
+
+        """
+        all_grades = []
+        for course, grades in self.grades.items():
+            all_grades += grades
+        mean = sum(all_grades) / len(all_grades)
+        return mean
+
+    def __str__(self):
+        """
+
+        :return: prints the reviewer name
+        the function prints the reviewer name
+
+        """
+        text = (f"Имя: {self.name}\n"
+                f"Фамилия: {self.surname}\n"
+                f"Средняя оценка за лекции: {self.__mean}\n")
+        return text
 
 
 class Reviewer(Mentor):
@@ -56,7 +120,6 @@ class Reviewer(Mentor):
         super().__init__(name, surname)
 
     def rate_hw(self, student, course, grade):
-
         """
 
             :param student: shows a student's name
@@ -70,7 +133,6 @@ class Reviewer(Mentor):
             Also, the function checks if a grade is between 0 and 10
 
             """
-
         if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
             if 0 < grade <= 10:
                 if course in student.grades:
@@ -83,7 +145,18 @@ class Reviewer(Mentor):
         else:
             return 'Ошибка'
 
-best_student = Student('Ruoy', 'Eman', 'your_gender')
+    def __str__(self):
+        """
+
+        :return: prints the reviewer name
+        the function prints the reviewer name
+
+        """
+        text =(f"Имя: {self.name}\n"
+               f"Фамилия: {self.surname}\n")
+        return text
+
+best_student = Student('Ruoy', 'Eman', 'male')
 best_student.courses_in_progress += ['Python']
 
 cool_reviewer = Reviewer('Some', 'Buddy')
@@ -93,11 +166,21 @@ cool_lecturer = Lecturer('Donald', 'Duck')
 cool_lecturer.courses_attached += ['Python']
 
 best_student.rate_lecturer(cool_lecturer, 'Python', 4)
+best_student.rate_lecturer(cool_lecturer, 'Python', 9)
+best_student.rate_lecturer(cool_lecturer, 'Python', 3)
+best_student.rate_lecturer(cool_lecturer, 'Python', 7)
 best_student.rate_lecturer(cool_lecturer, 'Python', 40)
 
-cool_reviewer.rate_hw(best_student, 'Python', 10)
+#worst_student = Student('Andrew', 'Tate', 'male')
+#worst_student.courses_in_progress += ['Python']
+
+
+cool_reviewer.rate_hw(best_student, 'Python', 2)
 cool_reviewer.rate_hw(best_student, 'Python', 10)
 cool_reviewer.rate_hw(best_student, 'Python', 10)
 
 print(best_student.grades)
 print(cool_lecturer.grades)
+print(cool_reviewer)
+print(cool_lecturer)
+print(best_student)
